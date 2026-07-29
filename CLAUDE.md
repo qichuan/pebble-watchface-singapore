@@ -2,9 +2,14 @@
 
 ## What this is
 
-A Pebble watchface. The Singapore flag's red band is cut by the display edge,
-so the crescent and its five stars sit exactly where they do on the flag —
-top-left, small, unfussy. Everything below the cut is white space for the hour.
+**Majulah** — a Pebble watchface. The Singapore flag's red band is cut by the
+display edge, so the crescent and its five stars sit exactly where they do on
+the flag — top-left, small, unfussy. Everything below the cut is white space for
+the hour.
+
+Named for the first word of *Majulah Singapura*. The design sheet it was built
+from calls the layout "Crescent Field"; that phrase survives only as a
+description of the composition, never as the product name.
 
 | Directory | Language | Role |
 | --- | --- | --- |

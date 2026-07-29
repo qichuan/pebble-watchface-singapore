@@ -1,5 +1,5 @@
 {
-  "name": "crescent-field",
+  "name": "majulah",
   "author": "Zhang Qichuan",
   "version": "1.0.0",
   "keywords": [
@@ -7,12 +7,13 @@
     "watchface",
     "minimal",
     "singapore",
-    "flag"
+    "flag",
+    "national-day"
   ],
   "private": true,
   "dependencies": {},
   "pebble": {
-    "displayName": "Crescent Field",
+    "displayName": "Majulah",
     "uuid": "6af9f960-a657-46a3-9956-27045aec24b8",
     "sdkVersion": "3",
     "enableMultiJS": true,

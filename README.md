@@ -1,6 +1,8 @@
-# Crescent Field
+# Majulah
 
 A Pebble watchface: the Singapore flag, reduced to a chord.
+
+Named for the first word of *Majulah Singapura* — onward, Singapore.
 
 <p align="center">
   <img src="developer-portal/screenshots/basalt/basalt.png" width="144" alt="Basalt">
