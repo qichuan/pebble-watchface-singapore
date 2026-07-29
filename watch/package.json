@@ -1,0 +1,35 @@
+{
+  "name": "crescent-field",
+  "author": "Zhang Qichuan",
+  "version": "1.0.0",
+  "keywords": [
+    "pebble-app",
+    "watchface",
+    "minimal",
+    "singapore",
+    "flag"
+  ],
+  "private": true,
+  "dependencies": {},
+  "pebble": {
+    "displayName": "Crescent Field",
+    "uuid": "6af9f960-a657-46a3-9956-27045aec24b8",
+    "sdkVersion": "3",
+    "enableMultiJS": true,
+    "targetPlatforms": [
+      "aplite",
+      "basalt",
+      "chalk",
+      "diorite",
+      "emery",
+      "flint",
+      "gabbro"
+    ],
+    "watchapp": {
+      "watchface": true
+    },
+    "resources": {
+      "media": []
+    }
+  }
+}
