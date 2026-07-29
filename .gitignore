@@ -3,5 +3,8 @@ watch/build/
 watch/.lock-waf_darwin_build
 *.pbw
 
+# Tools
+__pycache__/
+
 # OS
 .DS_Store

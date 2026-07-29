@@ -1,5 +1,5 @@
 {
-  "name": "majulah",
+  "name": "majulah-sg",
   "author": "Zhang Qichuan",
   "version": "1.0.0",
   "keywords": [
@@ -13,7 +13,7 @@
   "private": true,
   "dependencies": {},
   "pebble": {
-    "displayName": "Majulah",
+    "displayName": "Majulah SG",
     "uuid": "6af9f960-a657-46a3-9956-27045aec24b8",
     "sdkVersion": "3",
     "enableMultiJS": true,
@@ -30,7 +30,14 @@
       "watchface": true
     },
     "resources": {
-      "media": []
+      "media": [
+        {
+          "menuIcon": true,
+          "type": "png",
+          "name": "IMAGE_MENU_ICON",
+          "file": "images/menu_icon.png"
+        }
+      ]
     }
   }
 }

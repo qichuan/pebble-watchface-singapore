@@ -58,6 +58,13 @@ The date string compiles and runs on the host, with no SDK or emulator involved:
 tools/run_tests.sh
 ```
 
+The app icons and the watch's menu icon are generated from the same
+crescent-and-star construction the face uses, so they cannot drift from it:
+
+```sh
+python3 tools/make_icons.py
+```
+
 The emulator's clock follows the host, so the face can only ever be
 screenshotted at the current time and date. Everything calendar-shaped — the
 weekday and month tables, the zero-padded day, the leap day — is pinned in those

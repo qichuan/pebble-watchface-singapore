@@ -1,22 +1,5 @@
-Majulah is the Singapore flag, reduced to a chord — named for the first word of
-Majulah Singapura.
+Majulah Singapura!
 
-The red band is cut by the display edge, so the crescent and its five stars sit
-exactly where they do on the flag — top-left, small, unfussy. Everything below
-the cut is white space for the hour.
+The Singapore flag on your wrist. Works on every Pebble — round or square, colour or black-and-white.
 
-On a round watch the cut lands on the diameter, the longest chord the glass has
-to offer. The shape the flag makes on a circle is not a compromise here; it is
-the reason the face exists.
-
-The five stars are five-pointed, as they are on the flag, on every watch — down
-to the ones where each star is nine pixels across.
-
-The time, and the date beneath it in wide letter-spaced capitals. Nothing else —
-no battery meter, no step count. The empty field is the design.
-
-On the black-and-white watches the band goes solid black and the composition
-survives whole, because what carries it is the cut and where the emblem sits on
-it, never the colour.
-
-Built for the ninth of August.
+Install it and celebrate 9 August together!

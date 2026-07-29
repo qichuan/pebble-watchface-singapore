@@ -14,8 +14,8 @@ description of the composition, never as the product name.
 | Directory | Language | Role |
 | --- | --- | --- |
 | `watch/` | C | the app; all `pebble` commands run from here |
-| `tools/` | C + sh | host-side tests for the pure logic |
-| `developer-portal/` | assets | store copy and screenshots |
+| `tools/` | C + sh + py | host-side tests, and the icon generator |
+| `developer-portal/` | assets | store copy, screenshots and app icons |
 
 ## Commands
 
@@ -27,6 +27,7 @@ pebble install --emulator basalt
 pebble screenshot --emulator basalt --no-open shot.png
 
 tools/run_tests.sh                            # from the repo root; no SDK needed
+python3 tools/make_icons.py                   # regenerates all three icons
 ```
 
 ## Architecture
@@ -83,11 +84,26 @@ or touches a service.
   showed the lift was the *only* thing putting the rows off target: centring the
   line box lands the ink within about 2px of its intended centre for both faces,
   on every platform.
-- **System fonts only — the face ships no font resources.** `package.json` has
-  an empty `media` array and there is no `resources/` directory. Both faces come
-  from `fonts_get_system_font()`, belong to the firmware, and must **never** be
-  passed to `fonts_unload_custom_font()`. `prv_window_unload()` therefore
-  unloads no fonts at all, which is correct and not an oversight.
+- **System fonts only — the face ships no font resources.** The only thing in
+  `media` is the menu icon. Both faces come from `fonts_get_system_font()`,
+  belong to the firmware, and must **never** be passed to
+  `fonts_unload_custom_font()`. `prv_window_unload()` therefore unloads no fonts
+  at all, which is correct and not an oversight.
+- **Icons are generated, not hand-drawn.** `tools/make_icons.py` builds all
+  three from the same crescent-and-star construction the face uses, so they
+  cannot drift from the glass. Edit the script, re-run it, never touch the PNGs.
+- **A `menuIcon` is hard-converted to 1-bit.** Anti-aliasing that makes a small
+  star look star-shaped in the PNG is thrown away on the watch. Below about a
+  3px outer radius a five-pointed star thresholds into a cross, and below that
+  into a plain square — which is why the menu icon's crescent is drawn smaller
+  than the flag's proportion and its stars larger. The crescent survives being
+  shrunk; the stars do not.
+- **Judge the menu icon thresholded, at size, and then in the launcher.** A
+  four-up contact sheet of candidates is not enough — a variant that looked
+  star-shaped there turned out to be five crosses once zoomed. Threshold the
+  image at 50%, view it at 14x, and confirm on the watch:
+  `pebble emu-button --emulator basalt click select` twice reaches the
+  watchface list, where the icon is actually drawn.
 - **`ROBOTO_BOLD_SUBSET_49` is the ceiling.** It is the largest numeral face the
   platform offers, so emery and gabbro get the same 49px as a 144px watch and
   the time has no size classes. If a future change wants bigger digits on
