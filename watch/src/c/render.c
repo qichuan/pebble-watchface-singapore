@@ -66,9 +66,34 @@ static void prv_draw_tracked(GContext *ctx, const char *s, GFont font, GRect row
   }
 }
 
+// Picks the longest form of the countdown that the row can hold. Both strings
+// are already formatted -- this only chooses between them, so the update proc
+// still formats nothing and allocates nothing.
+//
+// Measuring beats a per-platform table here. The long label runs to 22
+// characters and fits on six of the seven platforms. The seventh is gabbro,
+// where the row is a chord: at 18px "CHINESE NEW YEAR TODAY" wants about 187px
+// and the glass offers 170 that far down, so those two days a year read
+// "CNY TODAY". Chalk, the other round platform, does fit it -- which is exactly
+// why this is measured rather than tabulated. The answer is not guessable from
+// the screen size, and a table would go stale the moment a name or a type size
+// changed.
+static const char *prv_fit_label(const SgfModel *m, GFont font, GRect row) {
+  // Measured against a box wider than any screen, so the answer is the label's
+  // own single-line width. Measuring against `row` would be useless: the layout
+  // engine reports what it managed to lay out, so a string too wide for the row
+  // comes back as exactly the row's width and always looks like it fits.
+  const GRect wide = GRect(0, 0, 1000, row.size.h);
+  const int w = graphics_text_layout_get_content_size(
+                    m->holiday, font, wide, GTextOverflowModeFill,
+                    GTextAlignmentLeft)
+                    .w;
+  return (w <= row.size.w) ? m->holiday : m->holiday_short;
+}
+
 void sgf_render(GContext *ctx, GRect bounds, const SgfModel *m,
                 const SgfFonts *f) {
-  const SgfLayout l = sgf_layout(bounds);
+  const SgfLayout l = sgf_layout(bounds, m->holiday[0] != '\0');
 
   graphics_context_set_fill_color(ctx, SGF_COL_FIELD);
   graphics_fill_rect(ctx, bounds, 0, GCornerNone);
@@ -86,10 +111,20 @@ void sgf_render(GContext *ctx, GRect bounds, const SgfModel *m,
   graphics_draw_text(ctx, m->time, f->time, l.time, GTextOverflowModeFill,
                      GTextAlignmentCenter, NULL);
 
-  // Empty on round, where the layout declines to place it.
+  // One slot, two marks. The rule is empty on round, and on every platform in
+  // the week before a public holiday, where the strip takes its place.
   if (l.rule.size.w > 0) {
     graphics_context_set_fill_color(ctx, SGF_COL_RULE);
     graphics_fill_rect(ctx, l.rule, 0, GCornerNone);
+  } else if (l.holiday.size.w > 0) {
+    graphics_context_set_text_color(ctx, SGF_COL_HOLI);
+    // Set plainly and centred, not through prv_draw_tracked. The date's
+    // letter-spacing is what makes it read as a caption; the strip is a notice
+    // and wants the opposite -- and at 22 characters it would overrun that
+    // function's 16-glyph limit and be dropped without a word.
+    graphics_draw_text(ctx, prv_fit_label(m, f->holiday, l.holiday), f->holiday,
+                       l.holiday, GTextOverflowModeFill, GTextAlignmentCenter,
+                       NULL);
   }
 
   graphics_context_set_text_color(ctx, SGF_COL_DATE);

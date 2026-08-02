@@ -23,6 +23,37 @@ watches — where each one is nine pixels across. They are filled by a scanline
 routine in `emblem.c` rather than by the SDK's `gpath_draw_filled()`, which
 cannot render a concave polygon at that size.
 
+## The countdown
+
+In the week before a Singapore public holiday the short red rule under the time
+is replaced by the holiday's name and the days left:
+
+```
+       10:43                         10:43
+         --                    NATIONAL DAY - 6D
+     WED 29 JUL                   WED 29 JUL
+```
+
+On the day itself the count gives way to the word — `NATIONAL DAY TODAY` — since
+the date row beside it already says which day it is.
+
+It takes the rule's place rather than sitting beside it. On a 144px watch there
+are twelve rows of white between the time's ink and the date's ink, so a fourth
+row at the date's own size would have pushed the whole composition apart. Set
+one size step smaller it fits in the slot the rule already had, and nothing else
+on the face moves. For the other fifty-one weeks of the year the rule comes
+back and the face is exactly as it was.
+
+The dates are the eleven gazetted by the [Ministry of
+Manpower](https://www.mom.gov.sg/employment-practices/public-holidays) for 2026
+and 2027. Chinese New Year, both Hari Rayas, Vesak Day and Deepavali follow
+lunar, lunisolar, Islamic and Buddhist calendars, so none of them can be derived
+from the Gregorian date — offline, a table is not a shortcut but the only
+correct answer. Only gazetted dates are in it: MOM publishes two years ahead,
+and after 25 December 2027 the face stops offering a countdown rather than
+guess. The Monday that follows a Sunday holiday is left out too, since MOM makes
+it conditional on the wearer's own rest day.
+
 ## Requirements
 
 Runs on all seven Pebble platforms:
@@ -52,10 +83,18 @@ pebble build
 pebble install --emulator basalt
 ```
 
-The date string compiles and runs on the host, with no SDK or emulator involved:
+The date string and the holiday countdown compile and run on the host, with no
+SDK or emulator involved:
 
 ```sh
 tools/run_tests.sh
+```
+
+Layout is checked by measuring a screenshot, not by eye — the script reports the
+band depth and the top, bottom and width of every row of ink below it:
+
+```sh
+python3 tools/measure.py shot.png
 ```
 
 The app icons and the watch's menu icon are generated from the same
@@ -80,10 +119,13 @@ host tests instead of eyeballed on the glass.
 +--------------------------+  <- half the height, every platform
 |                          |
 |         10:43            |     38% of the field below
-|           --             |     67% — the short rule; rect only
+|           --             |     67% — the rule (rect only), or the countdown
 |       WED 29 JUL         |     79%
 +--------------------------+
 ```
+
+One fraction places two marks that are never both drawn: the short rule, and the
+holiday strip that displaces it.
 
 The band takes half the height everywhere. On a round screen that puts the cut
 on the diameter; on a square one it is the flag's own split, and it is what
@@ -108,6 +150,7 @@ rather than scaled down to them, which is why the small date stays legible.
 | --- | --- |
 | Time | Roboto Bold Subset 49 — the largest numeral face the platform has, and the one the stock digital watchface uses |
 | Date | Gothic Bold, stepping 14 / 18 / 24 px so gabbro does not get a caption sized for a 144px screen |
+| Countdown | One step below the date — Gothic 9 / 14 Bold / 18 Bold. The step down is what makes the row fit at all, not a stylistic choice |
 
 The time has no size classes because 49px is the ceiling; there is no larger
 system font to give the 200px and 260px screens. The trade is deliberate — on

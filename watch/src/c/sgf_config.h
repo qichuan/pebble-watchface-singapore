@@ -18,6 +18,9 @@
 #define SGF_COL_TIME    GColorBlack
 #define SGF_COL_DATE    PBL_IF_COLOR_ELSE(GColorDarkGray, GColorBlack)
 #define SGF_COL_RULE    SGF_COL_BAND
+// The holiday strip takes the rule's place, so it takes the rule's ink too --
+// the red mark under the time has simply found something to say.
+#define SGF_COL_HOLI    SGF_COL_RULE
 
 // --- Type ------------------------------------------------------------------
 // System fonts only. The face ships no font resources at all, so there is
@@ -45,6 +48,29 @@
 #else                                 // 144x168 rect platforms, and chalk
   #define SGF_FONT_DATE_KEY  FONT_KEY_GOTHIC_14_BOLD
   #define SGF_DATE_PX  14
+#endif
+
+// The holiday strip is set one size step below the date, and that is not a
+// stylistic choice -- it is what makes the row exist at all. Measured on the
+// shipped screenshots, the gap between the time's ink and the date's ink is
+// only 12 rows on a 144px screen (14 on chalk, 24 on emery, 29 on gabbro). A
+// line at the date's own size inks 9 to 14 of those rows and would leave
+// nothing either side, forcing the three field fractions apart and moving the
+// whole composition. A step down inks 7 to 13 and drops in with clearance to
+// spare, so SGF_TIME_CY_PCT, SGF_RULE_CY_PCT and SGF_DATE_CY_PCT are untouched.
+//
+// Nine is the smallest Gothic the firmware has and the only step below 14, so
+// the 144px class has no lighter option than this. It is legible because the
+// strip is short, upright and set in the band's red against white.
+#if PBL_DISPLAY_WIDTH >= 240          // gabbro 260x260
+  #define SGF_FONT_HOLI_KEY  FONT_KEY_GOTHIC_18_BOLD
+  #define SGF_HOLI_PX  18
+#elif PBL_DISPLAY_WIDTH >= 200        // emery 200x228
+  #define SGF_FONT_HOLI_KEY  FONT_KEY_GOTHIC_14_BOLD
+  #define SGF_HOLI_PX  14
+#else                                 // 144x168 rect platforms, and chalk
+  #define SGF_FONT_HOLI_KEY  FONT_KEY_GOTHIC_09
+  #define SGF_HOLI_PX  9
 #endif
 
 // Line box as a fraction of the point size. TrueType faces rendered by the SDK
@@ -117,6 +143,8 @@
 // very nearly touch, and the midpoint between them lands on top of the date.
 // A fraction of the field is both simpler and stable under type changes.
 #define SGF_TIME_CY_PCT  38
+// One fraction, two marks that are never both drawn: the rule, and -- in the
+// week before a public holiday -- the countdown strip that displaces it.
 #define SGF_RULE_CY_PCT  67
 #define SGF_DATE_CY_PCT  79
 

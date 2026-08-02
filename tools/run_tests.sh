@@ -11,4 +11,10 @@ cc -std=c11 -Wall -Wextra -Werror -I test \
    timeinfo_test.c ../watch/src/c/timeinfo.c \
    -o "$OUT/timeinfo_test"
 
+cc -std=c11 -Wall -Wextra -Werror -I test \
+   holidays_test.c ../watch/src/c/holidays.c \
+   -o "$OUT/holidays_test"
+
 "$OUT/timeinfo_test"
+echo
+"$OUT/holidays_test"

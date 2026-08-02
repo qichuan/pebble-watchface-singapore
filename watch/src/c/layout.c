@@ -56,7 +56,7 @@ static GRect prv_line(GRect gutter, int cy, int px) {
                (int16_t)h);
 }
 
-SgfLayout sgf_layout(GRect bounds) {
+SgfLayout sgf_layout(GRect bounds, bool countdown) {
   SgfLayout l;
 
   const int w = bounds.size.w;
@@ -95,20 +95,33 @@ SgfLayout sgf_layout(GRect bounds) {
   l.date = prv_line(gutter, field_y + ((field_h * SGF_DATE_CY_PCT) / 100),
                     SGF_DATE_PX);
 
+  // The rule's slot carries one mark or the other, never both. The strip takes
+  // the gutter rather than the full bounds: it is caption-scale text, which is
+  // the case the gutter exists for -- only the 49px time outgrows it.
+  const int mark_cy = field_y + ((field_h * SGF_RULE_CY_PCT) / 100);
+
+  if (countdown) {
+    l.rule = GRect(0, 0, 0, 0);
+    l.holiday = prv_line(gutter, mark_cy, SGF_HOLI_PX);
+  } else {
+    l.holiday = GRect(0, 0, 0, 0);
 #if defined(PBL_ROUND)
-  l.rule = GRect(0, 0, 0, 0);
+    l.rule = GRect(0, 0, 0, 0);
 #else
-  const int rule_h = SGF_RULE_H(h);
-  const int rule_w = SGF_RULE_W(w);
-  l.rule = GRect(
-      (int16_t)(bounds.origin.x + ((w - rule_w) / 2)),
-      (int16_t)((field_y + ((field_h * SGF_RULE_CY_PCT) / 100)) - (rule_h / 2)),
-      (int16_t)rule_w, (int16_t)rule_h);
+    const int rule_h = SGF_RULE_H(h);
+    const int rule_w = SGF_RULE_W(w);
+    l.rule = GRect((int16_t)(bounds.origin.x + ((w - rule_w) / 2)),
+                   (int16_t)(mark_cy - (rule_h / 2)), (int16_t)rule_w,
+                   (int16_t)rule_h);
 #endif
+  }
 
 #if defined(PBL_ROUND)
   l.time = prv_fit_round(bounds, l.time, SGF_TIME_PX);
   l.date = prv_fit_round(bounds, l.date, SGF_DATE_PX);
+  if (l.holiday.size.w > 0) {
+    l.holiday = prv_fit_round(bounds, l.holiday, SGF_HOLI_PX);
+  }
 #endif
 
   return l;
