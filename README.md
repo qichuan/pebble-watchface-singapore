@@ -1,8 +1,10 @@
-# Majulah
+# Majulah SG 
 
-A Pebble watchface: the Singapore flag, reduced to a chord.
+A Pebble watchface with the Singapore flag.
 
-Named for the first word of *Majulah Singapura* — onward, Singapore.
+Download it from [Pebble App Store](https://apps.repebble.com/7c8d451e7cf148988d11cd11)
+ 
+*Majulah Singapura means Onward Singapore.
 
 <p align="center">
   <img src="developer-portal/screenshots/basalt/basalt.png" width="144" alt="Basalt">
@@ -10,18 +12,6 @@ Named for the first word of *Majulah Singapura* — onward, Singapore.
   <img src="developer-portal/screenshots/aplite/aplite.png" width="144" alt="Aplite">
 </p>
 
-The red band is cut by the display edge, so the crescent and its five stars sit
-exactly where they do on the flag — top-left, small, unfussy. Everything below
-the cut is white space for the hour.
-
-On a round watch the cut lands on the diameter, which is the longest chord the
-glass has to offer. That is the whole idea: the shape the flag makes on a circle
-is not a compromise, it is the better version.
-
-The five stars are five-pointed, as they are on the flag, down to the 144px
-watches — where each one is nine pixels across. They are filled by a scanline
-routine in `emblem.c` rather than by the SDK's `gpath_draw_filled()`, which
-cannot render a concave polygon at that size.
 
 ## The countdown
 
@@ -37,22 +27,7 @@ is replaced by the holiday's name and the days left:
 On the day itself the count gives way to the word — `NATIONAL DAY TODAY` — since
 the date row beside it already says which day it is.
 
-It takes the rule's place rather than sitting beside it. On a 144px watch there
-are twelve rows of white between the time's ink and the date's ink, so a fourth
-row at the date's own size would have pushed the whole composition apart. Set
-one size step smaller it fits in the slot the rule already had, and nothing else
-on the face moves. For the other fifty-one weeks of the year the rule comes
-back and the face is exactly as it was.
 
-The dates are the eleven gazetted by the [Ministry of
-Manpower](https://www.mom.gov.sg/employment-practices/public-holidays) for 2026
-and 2027. Chinese New Year, both Hari Rayas, Vesak Day and Deepavali follow
-lunar, lunisolar, Islamic and Buddhist calendars, so none of them can be derived
-from the Gregorian date — offline, a table is not a shortcut but the only
-correct answer. Only gazetted dates are in it: MOM publishes two years ahead,
-and after 25 December 2027 the face stops offering a countdown rather than
-guess. The Monday that follows a Sunday holiday is left out too, since MOM makes
-it conditional on the wearer's own rest day.
 
 ## Requirements
 
