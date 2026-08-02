@@ -1,14 +1,16 @@
 {
   "name": "majulah-sg",
   "author": "Zhang Qichuan",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "keywords": [
     "pebble-app",
     "watchface",
     "minimal",
     "singapore",
     "flag",
-    "national-day"
+    "national-day",
+    "public-holiday",
+    "countdown"
   ],
   "private": true,
   "dependencies": {},

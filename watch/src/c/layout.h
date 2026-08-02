@@ -14,7 +14,11 @@ typedef struct {
   int star_r;      // outer radius of one five-pointed star
   GRect time;      // line box for the digits
   GRect rule;      // the short rule under them; empty where it is not drawn
+  GRect holiday;   // the countdown strip, in the rule's slot; empty when idle
   GRect date;      // line box for the tracked date
 } SgfLayout;
 
-SgfLayout sgf_layout(GRect bounds);
+// `countdown` is true in the week before a public holiday. It swaps one mark
+// for another in a single slot -- the strip for the rule -- and changes nothing
+// else about the composition.
+SgfLayout sgf_layout(GRect bounds, bool countdown);

@@ -2,4 +2,6 @@ Majulah Singapura!
 
 The Singapore flag on your wrist. Works on every Pebble — round or square, colour or black-and-white.
 
+Display a countdown to every Singapore public holiday, from a week out.
+
 Install it and celebrate 9 August together!

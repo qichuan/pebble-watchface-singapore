@@ -28,6 +28,7 @@ pebble screenshot --emulator basalt --no-open shot.png
 
 tools/run_tests.sh                            # from the repo root; no SDK needed
 python3 tools/make_icons.py                   # regenerates all three icons
+python3 tools/measure.py shot.png             # band depth and every row of ink
 ```
 
 ## Architecture
@@ -40,6 +41,7 @@ python3 tools/make_icons.py                   # regenerates all three icons
 | `src/c/render.c` | `sgf_render()` — the one update proc, plus the tracked-text setter |
 | `src/c/emblem.c` | the crescent and the five-star ring |
 | `src/c/timeinfo.c` | the date string. Pure C, no SDK calls |
+| `src/c/holidays.c` | the gazetted holiday table and the countdown label. Pure C |
 
 Data flows one way: the tick handler formats into `s_model`, then calls
 `layer_mark_dirty()`. The update proc only reads. It never formats, allocates,
@@ -126,6 +128,45 @@ or touches a service.
   full-width rect simply falls off the glass and what is left is the chord. No
   clipping of our own is involved, and no round-specific band value either —
   the half is what every platform uses.
+- **The countdown strip fits only because it is a size step below the date.**
+  Measured on the shipped screenshots, the white between the time's ink and the
+  date's ink is 12 rows on 144×168, 14 on chalk, 24 on emery, 29 on gabbro — and
+  on rect two of those are the rule. A line at the date's own size inks 9 to 14
+  of them and leaves nothing either side, which forces the three field fractions
+  apart and moves the whole composition. One step down inks 6 to 11 and lands
+  with 3 to 5 rows clear top and bottom, so `SGF_TIME_CY_PCT`,
+  `SGF_RULE_CY_PCT` and `SGF_DATE_CY_PCT` are untouched and the off-window face
+  is pixel-identical to 1.0.0. If the strip ever grows, that is the first thing
+  that breaks, and `tools/measure.py` is what shows it.
+- **`GOTHIC_09` is the floor.** It is the smallest system font there is and the
+  only step below 14, so the 144px class has nothing lighter to fall back to. A
+  future row below the date has no size left to be set in.
+- **The rule and the strip share one slot and are never both drawn.** `l.rule`
+  and `l.holiday` are each empty when the other is used, which is the same
+  empty-rect signal `rule` already carried on round. Do not give the strip its
+  own fraction — the point is that it costs the composition nothing.
+- **Measure the label against a box wider than the screen, not against the row.**
+  `graphics_text_layout_get_content_size()` reports what it managed to lay out,
+  so a string too wide for the row comes back as exactly the row's width and
+  always looks like it fits. `prv_fit_label()` measures against a 1000px box for
+  that reason. The fallback is not decorative: `CHINESE NEW YEAR TODAY` at 18px
+  genuinely does not fit gabbro's chord that far down the glass, and gabbro
+  shows `CNY TODAY` on those two days a year.
+- **The holiday table is gazetted dates only, and it ends on 25 Dec 2027.**
+  Chinese New Year, both Hari Rayas, Vesak Day and Deepavali follow lunar,
+  lunisolar, Islamic and Buddhist calendars — none of them is derivable from the
+  Gregorian date, so the table is the only correct offline answer. MOM publishes
+  two years ahead; third-party calendars go further but their Hari Raya dates
+  are moon-sighting dependent and move. Past the table the strip simply never
+  appears. Extending it means taking the new dates from MOM, in `holidays.c`
+  *and* in the independent copy in `tools/holidays_test.c` — the test keeps its
+  own list on purpose, because a test that reads its expectations out of the
+  code under test proves only that the code agrees with itself.
+- **The countdown cannot be checked on the glass.** The emulator's clock follows
+  the host, so the only date the face can be screenshotted at is today, and a
+  countdown is by definition about a date that is not today. The logic is pinned
+  in `tools/holidays_test.c` across 852 consecutive days. To see the strip at
+  all, add a temporary entry to `s_hol[]` a few days out, shoot it, and revert.
 - **Place the rule by fraction, not by the gap between line boxes.** It used to
   be derived as the midpoint between the time and date boxes. That held while
   the field was 62% of the screen; at 50% those boxes very nearly touch and the
